@@ -37,7 +37,7 @@ class Ui_MainWindow(object):
         self.LiveScreenTime_Widget.setStyleSheet("background-color: white")
         self.LiveScreenTime_Widget.setObjectName("LiveScreenTime_Widget")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.LiveScreenTime_Widget)
-        self.verticalLayout_2.setContentsMargins(20, 0, 20, 0)
+        self.verticalLayout_2.setContentsMargins(23, 15, 24, 15)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")

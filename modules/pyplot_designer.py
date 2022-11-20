@@ -10,7 +10,7 @@ class PieChartCanvas(FigureCanvas):
     """
     Instance that plots all graphs on the UI
     """
-    def __init__(self, parent=None, height=10, width=20, dpi=100):
+    def __init__(self, parent=None, height=12, width=20, dpi=100):
         self.figure = Figure(figsize=(width, height), dpi=dpi)
 
         FigureCanvas.__init__(self, self.figure)
@@ -62,7 +62,7 @@ class PieChartCanvas(FigureCanvas):
 
             ax.set_title(chart, pad = 15)
 
-        self.figure.tight_layout(pad=8)
+        self.figure.tight_layout(pad=6)
         self.draw()
 
 
@@ -141,7 +141,7 @@ class LineChartCanvas(FigureCanvas):
     """
     Instance that plots all graphs on the UI
     """
-    def __init__(self, parent=None, height=10, width=20, dpi=100):
+    def __init__(self, parent=None, height=20, width=20, dpi=100):
         self.figure = Figure(figsize=(width, height), dpi=dpi)
 
         FigureCanvas.__init__(self, self.figure)
