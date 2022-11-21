@@ -1,10 +1,12 @@
 import sys
+import pandas as pd
 
-from PyQt5.QtWidgets import QMainWindow, QApplication
+from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem, QHeaderView
 from PyQt5 import QtCore
 
-from modules.pyplot_designer import PieChartsWidgetPlot, BarChartsWidgetPlot, LineChartsWidgetPlot
+from modules.pyplot_designer import PieChartsWidgetPlot, BarChartsWidgetPlot, LineChartsWidgetPlot, StepChartsWidgetPlot
 from ui.main_ui import Ui_MainWindow
+
 
 class window(Ui_MainWindow, QMainWindow):
     def __init__(self, parent=None):
@@ -20,17 +22,37 @@ class window(Ui_MainWindow, QMainWindow):
         self.line_chart_stats_grapher = LineChartsWidgetPlot()
         self.HBarChartStats_QHBoxLayout.addWidget(self.line_chart_stats_grapher)
 
+        self.step_chart_stats_grapher = StepChartsWidgetPlot()
+        self.timestampPlot_QHBoxLayout.addWidget(self.step_chart_stats_grapher)
+
         self.plot_category_stats()
         self.plot_graph_timeline("DAY")
         self.change_live_stats()
         self.plot_application_stats()
+        self.plot_day_timeline()
+        self.fill_table()
 
         self.connectSignalSlots()
+        self.main_stackedWidget.setCurrentIndex(0)
 
     def connectSignalSlots(self):
         self.monthGraph_pushButton.clicked.connect(lambda: self.plot_graph_timeline("MONTH"))
         self.weekGraph_pushButton.clicked.connect(lambda: self.plot_graph_timeline("WEEK"))
         self.dayGraph_pushButton.clicked.connect(lambda: self.plot_graph_timeline("DAY"))
+
+        self.main_stackedWidget.currentChanged.connect(self.change_main_stack_widget)
+        self.chooseApplication_comboBox.currentIndexChanged.connect(self.fill_table)
+        self.viewDetailedReport_pushButton.clicked.connect(lambda: self.main_stackedWidget.setCurrentIndex(1))
+
+        self.backToDailyReport_pushButton.clicked.connect(lambda: self.main_stackedWidget.setCurrentIndex(0))
+
+    def change_main_stack_widget(self):
+        if self.main_stackedWidget.currentIndex() == 1:
+            self.chooseApplication_comboBox.clear()
+            applications = ["ALL", "PRIME VIDEO"]
+
+            for app in applications:
+                self.chooseApplication_comboBox.addItem(app)
 
     def plot_category_stats(self):
         """
@@ -124,6 +146,45 @@ class window(Ui_MainWindow, QMainWindow):
             weekly_stats = weekly_stats,
             monthly_stats = monthly_stats
         )
+
+    def plot_day_timeline(self):
+        stats = {
+            "values": [10, 20, 15, 50, 40, 28, 55, 100],
+            "labels": ["visual studio", "Teams", "moodle", "cs go", "youtube", "chrome", "firefox", "inkspace"]
+        }
+        self.step_chart_stats_grapher.plot_step_chart(
+            stats = stats
+        )
+
+    def fill_table(self):
+        columns = ['DATE', 'APPLICATION', 'TIME SPENT']
+        selected_application = self.chooseApplication_comboBox.currentText()
+        if selected_application == "ALL":
+            data = pd.DataFrame([
+                ["22-11-2022", "PRIME VIDEO", "60"], 
+                ["21-11-2022", "GOOGLE CHROME", "90"], 
+                ["20-11-2022", "TEAMS", "30"]], 
+                columns=columns)
+        else:
+            data = pd.DataFrame([
+                ["22-11-2022", selected_application, "60"], 
+                ["21-11-2022", selected_application, "90"], 
+                ["20-11-2022", selected_application, "30"]], 
+                columns=columns)
+
+        row, column = data.shape
+        self.pandasViewer_QtableWidget.setRowCount(row+1)
+        self.pandasViewer_QtableWidget.setColumnCount(column)
+        
+        for i in range(column):
+            self.pandasViewer_QtableWidget.setItem(0, i, QTableWidgetItem(str(columns[i])))
+
+        for i in range(row):
+            for j in range(column):
+                self.pandasViewer_QtableWidget.setItem(i+1, j, QTableWidgetItem(str(data.iloc[i][columns[j]])))
+
+        self.pandasViewer_QtableWidget.horizontalHeader().setStretchLastSection(True)
+        self.pandasViewer_QtableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

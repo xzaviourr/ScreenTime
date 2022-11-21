@@ -1,10 +1,10 @@
 import numpy as np
+from collections import Counter
 
 from PyQt5.QtWidgets import QSizePolicy, QWidget, QVBoxLayout
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-import matplotlib as plt
 
 class PieChartCanvas(FigureCanvas):
     """
@@ -192,3 +192,68 @@ class LineChartsWidgetPlot(QWidget):
 
     def plot_stats_line_chart(self, weekly_stats:list, monthly_stats:list):
         self.canvas.plot_stats_line_chart(weekly_stats, monthly_stats)
+
+
+class StepChartCanvas(FigureCanvas):
+    """
+    Instance that plots all graphs on the UI
+    """
+    def __init__(self, parent=None, height=40, width=20, dpi=100):
+        self.figure = Figure(figsize=(width, height), dpi=dpi)
+
+        FigureCanvas.__init__(self, self.figure)
+        self.setParent(parent)
+
+        # Set width and size to be expanding to cover up the widget
+        FigureCanvas.setSizePolicy(
+            self,
+            QSizePolicy.Expanding,
+            QSizePolicy.Expanding
+        )
+
+    def plot_step_chart(self, stats:dict):
+        """
+        Plots step chart for activity during day
+
+        Args :
+            stats : dict[values, labels] : timely stats
+        """
+        self.figure.clear(True)
+        ax = self.figure.add_subplot(1, 1, 1)
+        
+        values = list(stats['values'])
+        labels = list(stats['labels'])
+        mapping = [[values[i], labels[i]] for i in range(len(labels))]
+        mapping = sorted(mapping, key=lambda x: x[0])
+        values = [row[0] for row in mapping]
+        labels = [row[1] for row in mapping]
+
+        colors = []
+        for _ in range(0, len(labels)):
+            colors.append(np.random.rand(1, 3))
+
+        ax.barh(
+            y = labels,
+            width = values,
+            height = 0.8,
+            color = colors
+        )
+
+        ax.set_xlabel("Minutes")
+        ax.set_ylabel("Application")
+        ax.set_title("Lifetime Usage", pad=15)
+
+        self.figure.tight_layout(pad=16)
+        self.draw()
+
+
+class StepChartsWidgetPlot(QWidget):
+    def __init__(self, *args, **kwargs):
+        QWidget.__init__(self, *args, **kwargs)
+        self.setLayout(QVBoxLayout())
+        self.canvas = StepChartCanvas(self)
+        self.layout().addWidget(self.canvas)
+
+    def plot_step_chart(self, stats:dict):
+        self.canvas.plot_step_chart(stats)
+
