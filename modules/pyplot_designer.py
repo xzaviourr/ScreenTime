@@ -81,7 +81,7 @@ class BarChartCanvas(FigureCanvas):
     """
     Instance that plots all graphs on the UI
     """
-    def __init__(self, parent=None, height=10, width=20, dpi=100):
+    def __init__(self, parent=None, height=15, width=40, dpi=100):
         self.figure = Figure(figsize=(width, height), dpi=dpi)
 
         FigureCanvas.__init__(self, self.figure)
@@ -94,18 +94,19 @@ class BarChartCanvas(FigureCanvas):
             QSizePolicy.Expanding
         )
 
-    def plot_stats_bar_chart(self, today_stats:dict):
+    def plot_stats_bar_chart(self, stats:dict, interval:str):
         """
         Plots pie charts for daily, weekly and monthly stats
 
         Args :
-            today_stats : dict[values, labels] : today's stats
+            stats : dict[values, labels] : today's stats
+            interval : MONTH, WEEK, DAY
         """
         self.figure.clear(True)
         ax = self.figure.add_subplot(1, 1, 1)
         
-        values = list(today_stats['values'])
-        labels = list(today_stats['labels'])
+        values = list(stats['values'])
+        labels = list(stats['labels'])
         
         colors = []
         for i in range(0, len(labels)+1):
@@ -120,9 +121,12 @@ class BarChartCanvas(FigureCanvas):
 
         ax.set_xlabel("Application")
         ax.set_ylabel("Minutes")
-        ax.set_title("Time Spent Today", pad = 15)
+        if interval == "DAY":
+            ax.set_title("Time Spent TODAY", pad = 15)
+        else:
+            ax.set_title(f"Time Spent this {interval}", pad = 15)
 
-        self.figure.tight_layout(pad=8)
+        # self.figure.tight_layout(pad=8)
         self.draw()
 
 
@@ -133,8 +137,8 @@ class BarChartsWidgetPlot(QWidget):
         self.canvas = BarChartCanvas(self)
         self.layout().addWidget(self.canvas)
 
-    def plot_stats_bar_chart(self, today_stats:dict):
-        self.canvas.plot_stats_bar_chart(today_stats)
+    def plot_stats_bar_chart(self, stats:dict, interval:str):
+        self.canvas.plot_stats_bar_chart(stats, interval)
 
 
 class LineChartCanvas(FigureCanvas):

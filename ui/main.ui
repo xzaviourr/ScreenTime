@@ -20,28 +20,6 @@
    <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="horizontalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>630</x>
-      <y>10</y>
-      <width>1271</width>
-      <height>371</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="StatsGraph_QHBoxLaybout"/>
-   </widget>
-   <widget class="QWidget" name="horizontalLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>630</x>
-      <y>400</y>
-      <width>1271</width>
-      <height>591</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="BarChartStats_QHBoxLayout"/>
-   </widget>
    <widget class="QWidget" name="LiveScreenTime_Widget" native="true">
     <property name="geometry">
      <rect>
@@ -153,6 +131,80 @@
      </rect>
     </property>
     <layout class="QVBoxLayout" name="HBarChartStats_QHBoxLayout"/>
+   </widget>
+   <widget class="QStackedWidget" name="stackedWidget">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>10</y>
+      <width>1291</width>
+      <height>981</height>
+     </rect>
+    </property>
+    <widget class="QWidget" name="page">
+     <widget class="QWidget" name="horizontalLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>390</y>
+        <width>1271</width>
+        <height>561</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="BarChartStats_QHBoxLayout"/>
+     </widget>
+     <widget class="QPushButton" name="weekGraph_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>1090</x>
+        <y>940</y>
+        <width>89</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>WEEK</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="monthGraph_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>1000</x>
+        <y>940</y>
+        <width>89</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>MONTH</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>0</y>
+        <width>1271</width>
+        <height>371</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="StatsGraph_QHBoxLaybout"/>
+     </widget>
+     <widget class="QPushButton" name="dayGraph_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>1180</x>
+        <y>940</y>
+        <width>89</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>DAY</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_2"/>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

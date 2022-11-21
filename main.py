@@ -21,9 +21,16 @@ class window(Ui_MainWindow, QMainWindow):
         self.HBarChartStats_QHBoxLayout.addWidget(self.line_chart_stats_grapher)
 
         self.plot_category_stats()
-        self.plot_daily_stats()
+        self.plot_graph_timeline("DAY")
         self.change_live_stats()
         self.plot_application_stats()
+
+        self.connectSignalSlots()
+
+    def connectSignalSlots(self):
+        self.monthGraph_pushButton.clicked.connect(lambda: self.plot_graph_timeline("MONTH"))
+        self.weekGraph_pushButton.clicked.connect(lambda: self.plot_graph_timeline("WEEK"))
+        self.dayGraph_pushButton.clicked.connect(lambda: self.plot_graph_timeline("DAY"))
 
     def plot_category_stats(self):
         """
@@ -50,16 +57,41 @@ class window(Ui_MainWindow, QMainWindow):
             monthly_stats = monthly_stats
         )
 
-    def plot_daily_stats(self):
+    def plot_graph_timeline(self, interval:str):
         """
         Plots user stats for today
+        interval : MONTH, WEEK, DAY
         """
-        today_stats = {
-            "values": [10, 20, 15, 40, 15, 20],
-            "labels": ["Teams", "Moodle", "Chrome", "VS Code", "Counter Strike", "Notepad"]
-        }
+        if interval == "DAY":
+            stats = {
+                "values": [10, 20, 15, 40, 15, 20],
+                "labels": ["Teams", "Moodle", "Chrome", "VS Code", "Counter Strike", "Notepad"]
+            }
+            self.dayGraph_pushButton.setStyleSheet("font-weight: bold;")
+            self.weekGraph_pushButton.setStyleSheet("font-weight: light;")
+            self.monthGraph_pushButton.setStyleSheet("font-weight: light;")
+
+        elif interval == "WEEK":
+            stats = {
+                "values": [25, 40, 100, 85, 150, 100],
+                "labels": ["Teams", "Moodle", "VS Code", "Chrome", "Counter Strike", "Notepad"]
+            }
+            self.dayGraph_pushButton.setStyleSheet("font-weight: light;")
+            self.weekGraph_pushButton.setStyleSheet("font-weight: bold;")
+            self.monthGraph_pushButton.setStyleSheet("font-weight: light;")
+
+        else:
+            stats = {
+                "values": [400, 375, 260, 850, 370, 200],
+                "labels": ["Teams", "VS Code", "Moodle", "Chrome", "Notepad", "Counter Strike"]
+            }
+            self.dayGraph_pushButton.setStyleSheet("font-weight: light;")
+            self.weekGraph_pushButton.setStyleSheet("font-weight: light;")
+            self.monthGraph_pushButton.setStyleSheet("font-weight: bold;")
+
         self.bar_chart_stats_grapher.plot_stats_bar_chart(
-            today_stats = today_stats
+            stats = stats,
+            interval = interval
         )
 
     def change_live_stats(self):
