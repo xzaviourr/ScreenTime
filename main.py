@@ -3,6 +3,7 @@ import pandas as pd
 
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem, QHeaderView
 from PyQt5 import QtCore
+from PyQt5.QtGui import QFont
 
 from modules.pyplot_designer import PieChartsWidgetPlot, BarChartsWidgetPlot, LineChartsWidgetPlot, StepChartsWidgetPlot
 from ui.main_ui import Ui_MainWindow
@@ -25,6 +26,10 @@ class window(Ui_MainWindow, QMainWindow):
         self.step_chart_stats_grapher = StepChartsWidgetPlot()
         self.timestampPlot_QHBoxLayout.addWidget(self.step_chart_stats_grapher)
 
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.handle_timer_event)
+        self.timer.start(2000)
+
         self.plot_category_stats()
         self.plot_graph_timeline("DAY")
         self.change_live_stats()
@@ -34,6 +39,13 @@ class window(Ui_MainWindow, QMainWindow):
 
         self.connectSignalSlots()
         self.main_stackedWidget.setCurrentIndex(0)
+
+    def handle_timer_event(self):
+        self.change_live_stats()
+        self.plot_graph_timeline(interval=self.last_interval_plotted)
+        self.plot_category_stats()
+        self.plot_day_timeline()
+        self.fill_table()
 
     def connectSignalSlots(self):
         self.monthGraph_pushButton.clicked.connect(lambda: self.plot_graph_timeline("MONTH"))
@@ -84,6 +96,7 @@ class window(Ui_MainWindow, QMainWindow):
         Plots user stats for today
         interval : MONTH, WEEK, DAY
         """
+        self.last_interval_plotted = interval
         if interval == "DAY":
             stats = {
                 "values": [10, 20, 15, 40, 15, 20],
@@ -176,8 +189,14 @@ class window(Ui_MainWindow, QMainWindow):
         self.pandasViewer_QtableWidget.setRowCount(row+1)
         self.pandasViewer_QtableWidget.setColumnCount(column)
         
+        font = QFont()
+        font.setBold(True)
+        font.setPointSize(15)
+
         for i in range(column):
-            self.pandasViewer_QtableWidget.setItem(0, i, QTableWidgetItem(str(columns[i])))
+            itm = QTableWidgetItem(str(columns[i]))
+            self.pandasViewer_QtableWidget.setItem(0, i, itm)
+            self.pandasViewer_QtableWidget.item(0, i).setFont(font)
 
         for i in range(row):
             for j in range(column):

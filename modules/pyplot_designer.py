@@ -10,7 +10,7 @@ class PieChartCanvas(FigureCanvas):
     """
     Instance that plots all graphs on the UI
     """
-    def __init__(self, parent=None, height=12, width=20, dpi=100):
+    def __init__(self, parent=None, height=10, width=20, dpi=100):
         self.figure = Figure(figsize=(width, height), dpi=dpi)
 
         FigureCanvas.__init__(self, self.figure)
@@ -55,14 +55,14 @@ class PieChartCanvas(FigureCanvas):
                 labels = labels,
                 shadow = True,
                 startangle = 90, 
-                radius = 1.35,
+                radius = 1.15,
                 wedgeprops = {'linewidth': 1, 'edgecolor': "black"},
                 textprops = dict(color = "black", size = 10)
             )
 
             ax.set_title(chart, pad = 15)
 
-        self.figure.tight_layout(pad=6)
+        # self.figure.tight_layout(pad=6)
         self.draw()
 
 
@@ -83,6 +83,7 @@ class BarChartCanvas(FigureCanvas):
     """
     def __init__(self, parent=None, height=15, width=40, dpi=100):
         self.figure = Figure(figsize=(width, height), dpi=dpi)
+        self.colors = []
 
         FigureCanvas.__init__(self, self.figure)
         self.setParent(parent)
@@ -108,15 +109,15 @@ class BarChartCanvas(FigureCanvas):
         values = list(stats['values'])
         labels = list(stats['labels'])
         
-        colors = []
-        for i in range(0, len(labels)+1):
-            colors.append(np.random.rand(1, 3))
+        if len(self.colors) < len(labels):
+            for i in range(len(labels) - len(self.colors)):
+                self.colors.append(np.random.rand(1, 3))
 
         ax.bar(
             x = labels,
             height = values,
             width = 0.8,
-            color = colors
+            color = self.colors[:len(labels)]
         )
 
         ax.set_xlabel("Application")
@@ -200,6 +201,7 @@ class StepChartCanvas(FigureCanvas):
     """
     def __init__(self, parent=None, height=40, width=20, dpi=100):
         self.figure = Figure(figsize=(width, height), dpi=dpi)
+        self.colors = []
 
         FigureCanvas.__init__(self, self.figure)
         self.setParent(parent)
@@ -228,22 +230,22 @@ class StepChartCanvas(FigureCanvas):
         values = [row[0] for row in mapping]
         labels = [row[1] for row in mapping]
 
-        colors = []
-        for _ in range(0, len(labels)):
-            colors.append(np.random.rand(1, 3))
+        if len(self.colors) < len(labels):
+            for i in range(len(labels) - len(self.colors)):
+                self.colors.append(np.random.rand(1, 3))
 
         ax.barh(
             y = labels,
             width = values,
             height = 0.8,
-            color = colors
+            color = self.colors[:len(labels)]
         )
 
         ax.set_xlabel("Minutes")
         ax.set_ylabel("Application")
         ax.set_title("Lifetime Usage", pad=15)
 
-        self.figure.tight_layout(pad=16)
+        # self.figure.tight_layout(pad=16)
         self.draw()
 
 

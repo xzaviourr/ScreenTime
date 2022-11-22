@@ -124,9 +124,14 @@ class Ui_MainWindow(object):
         self.chooseApplication_comboBox.setObjectName("chooseApplication_comboBox")
         self.pandasViewer_QtableWidget = QtWidgets.QTableWidget(self.page_2)
         self.pandasViewer_QtableWidget.setGeometry(QtCore.QRect(660, 130, 631, 791))
+        self.pandasViewer_QtableWidget.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.pandasViewer_QtableWidget.setLineWidth(2)
+        self.pandasViewer_QtableWidget.setGridStyle(QtCore.Qt.DashLine)
         self.pandasViewer_QtableWidget.setObjectName("pandasViewer_QtableWidget")
         self.pandasViewer_QtableWidget.setColumnCount(0)
         self.pandasViewer_QtableWidget.setRowCount(0)
+        self.pandasViewer_QtableWidget.horizontalHeader().setVisible(False)
+        self.pandasViewer_QtableWidget.verticalHeader().setVisible(False)
         self.backToDailyReport_pushButton = QtWidgets.QPushButton(self.page_2)
         self.backToDailyReport_pushButton.setGeometry(QtCore.QRect(1040, 930, 241, 41))
         font = QtGui.QFont()
@@ -145,7 +150,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.main_stackedWidget.setCurrentIndex(0)
+        self.main_stackedWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
